@@ -1,0 +1,60 @@
+pmc464 board driver
+
+This driver is designed to provide basic services to access board from user
+space. All advanced features should be included in userspace.
+
+System requirements :
+The driver is based on a 2.6 Kernel series
+
+------------------------------------------------------------------------------
+Basic use
+
+Compile :
+> make
+
+Load module :
+> sudo insmod pmc464.ko
+
+Unload module :
+> sudo rmmod pmc464
+
+Change /dev/pmc464[0-3] user rights 
+> sudo cp 80-pmc464.rules /etc/udev/rules.d/
+
+------------------------------------------------------------------------------
+Create a debian 7.0 dkms package :
+
+Install needed packages
+> sudo apt-get install dkms debhelper
+
+Add files
+> sudo mkdir -p /usr/src/pmc464-1.00.00
+> sudo cp -r ./* /usr/src/pmc464-1.00.00/
+
+Remove unwanted package files
+> rm -f  /usr/src/pmc464-1.00.00/.svn
+
+Register, build and install the module with dkms
+> sudo dkms add -m pmc464 -v 1.00.00
+> sudo dkms build -m pmc464 -v 1.00.00
+> sudo dkms install -m pmc464 -v 1.00.00
+
+Control
+> ls -al /lib/modules/3.2.0-4-686-pae/updates/dkms/
+
+Create the debian package
+> sudo dkms mkdsc -m pmc464 -v 1.00.00 --source-only
+> sudo dkms mkdeb -m pmc464 -v 1.00.00 --source-only
+
+Save it
+> cp /var/lib/dkms/pmc464/1.00.00/deb/pmc464-dkms_1.00.00_all.deb ~
+
+Unregister the module with dkms
+> sudo dkms remove -m pmc464 -v 1.00.00 --all
+
+Remove temporary files
+> sudo rm -rf /var/lib/dkms/pmc464
+> sudo rm -rf /usr/src/pmc464-1.00.00
+
+Install the package
+> sudo dpkg -i ~/pmc464-dkms_1.00.00_all.deb

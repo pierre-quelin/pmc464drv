@@ -1,0 +1,2 @@
+# Change the user rights
+KERNEL=="pmc464_[0-3]", GROUP="realtime", MODE="0660"

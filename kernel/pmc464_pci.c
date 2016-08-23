@@ -139,10 +139,10 @@ static ssize_t pmc464_read(struct file *file,
 
    put_user(ldata, (unsigned long *) (buf + (sizeof(unsigned long)))); /* update user data */
 
-   dprintk("BRD %d pmc464_read addr:0x%04X size:%d\n",
+   dprintk("BRD %d pmc464_read addr:0x%04X size:%zu\n",
            dev->minor,
            (unsigned int)addr-(unsigned int)membase,
-           (unsigned int)length);
+           length);
 
    return (length);
 }
@@ -186,11 +186,11 @@ static ssize_t pmc464_write(struct file* file,
       break;
    }
 
-   dprintk("BRD %d pmc464_write addr:0x%04X data:0x%04X size:%d\n",
+   dprintk("BRD %d pmc464_write addr:0x%04X data:0x%04X size:%zu\n",
            dev->minor,
            (unsigned int)addr-(unsigned int)membase,
            (unsigned int)ldata,
-           (unsigned int)length);
+           length);
 
    return (length);
 }
@@ -413,7 +413,7 @@ static irqreturn_t pmc464_isr(int irq, void* handle)
  * @param id ID the kernel will use to associate devices to this driver.
  * @return On success zero is returned.
  **/
-static int __devinit pmc464_pci_probe(struct pci_dev* pci_dev,
+static int pmc464_pci_probe(struct pci_dev* pci_dev,
                                       const struct pci_device_id* id)
 {
    int err;
@@ -538,7 +538,7 @@ out_free:
  *
  * @param pci_dev The PCI device
  **/
-static void __devexit pmc464_pci_remove (struct pci_dev* pci_dev)
+static void pmc464_pci_remove (struct pci_dev* pci_dev)
 {
    struct pmc464_dev* dev = pci_get_drvdata(pci_dev);
 
